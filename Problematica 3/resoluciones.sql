@@ -39,3 +39,14 @@ SELECT * FROM cuenta
 WHERE balance/100 > 8000
 ORDER BY balance ASC
 LIMIT 5
+
+--Seleccionar los préstamos que tengan fecha en abril, junio y agosto, ordenándolos por importe
+SELECT *, strftime('%m', loan_date) as mes FROM prestamo
+WHERE mes = '04' OR mes = '06' OR mes = '08'
+ORDER BY loan_total DESC
+
+--Obtener el importe total de los prestamos agrupados por tipo de préstamos. 
+--Por cada tipo de préstamo de la tabla préstamo, calcular la suma de sus importes.
+--Renombrar la columna como loan_total_accu
+SELECT loan_type, count(loan_total) as loan_type_cant, sum(loan_total) as loan_total_accu from prestamo
+GROUP BY loan_type
