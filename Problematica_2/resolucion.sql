@@ -58,6 +58,15 @@ UPDATE cliente
 SET branch_id = 10
 WHERE customer_name like 'Gabriel'
 
+--chequeamos el UPDATE de sucursales
+SELECT customer_name, branch_id
+FROM cliente
+WHERE customer_name like 'Lois' or
+	customer_name like 'Hall' or 
+	customer_name like 'Hilel' or 
+	customer_name like 'Jin'or 
+	customer_name like 'Gabriel'
+
 -- Eliminar el registro correspondiente a “David” realizando la selección por el nombre
 
         --borramos a david de la carpeta cliente
