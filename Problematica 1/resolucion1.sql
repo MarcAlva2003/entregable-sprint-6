@@ -11,11 +11,6 @@ VALUES ('Gold')
 INSERT INTO tipo_cliente(tipo_cliente_nombre)
 VALUES ('Black')
 
-SELECT * 
-from tipo_cuenta
-
-
-
 Create table tipo_cuenta(
 	tipo_cuenta_Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	cuenta_corriente INTEGER NOT NULL CHECK(cuenta_corriente>=0 AND cuenta_corriente <=1),
@@ -24,7 +19,8 @@ Create table tipo_cuenta(
 	tipo_cliente_id INTEGER NOT NULL,
 	FOREIGN KEY(tipo_cliente_id) REFERENCES tipo_cliente(tipo_cliente_id)
 )
-ALTER TABLE cuenta ADD COLUMN tipo_cuenta_id INTEGER REFERENCES tipo_cuenta(tipo_cuenta_Id);
+--ampliamos el alcance de cuenta para que reconozca el tipo de cuenta 
+ALTER TABLE cuenta ADD COLUMN tipo_cuenta_id INTEGER REFERENCES tipo_cuenta(tipo_cuenta_Id)
 -- le insertamos True(1) o False(0) para indicar si el cliente tiene o no la caracteristica.
 INSERT INTO tipo_cuenta(cuenta_corriente,caja_ahorro_pesos,caja_ahorro_dolares,tipo_cliente_id)
 VALUES(False,True ,False , 1)
@@ -34,19 +30,16 @@ VALUES( True,True ,True , 2)
 
 INSERT INTO tipo_cuenta(cuenta_corriente,caja_ahorro_pesos,caja_ahorro_dolares,tipo_cliente_id)
 VALUES( True,True ,True , 3)
--- revisar porque no toma el valor de los random
+
 UPDATE cuenta
-SET tipo_cuenta_id_id = (abs(random())%(3-1)+1)
+SET tipo_cuenta_id = (abs(random())%(4-1)+1)
 WHERE account_id > 0
-
-SELECT * from cuenta
-
-SELECT * FROM tipo_cuenta
 
 create table marca_tarjeta(
 	marca_tarjeta_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	marca text not null 
 )
+
 INSERT INTO marca_tarjeta(marca)
 VALUES ('Visa')
 
@@ -60,6 +53,7 @@ create table tipo_tarjeta(
 	tipo_tarjeta_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	tipo_de_tarjeta text not null 
 )
+
 INSERT INTO tipo_tarjeta(tipo_de_tarjeta)
 VALUES ('Credito')
 
@@ -74,8 +68,10 @@ create table tarjetas(
 	fecha_vencimiento TEXT NOT NULL,
 	tipo_tarjeta_id INTEGER NOT NULL,
 	marca_tarjeta_id INTEGER NOT NULL,
+	account_id INTEGER NOT NULL,
 	FOREIGN KEY (tipo_tarjeta_id) REFERENCES tipo_tarjeta(tipo_tarjeta_id),
-	FOREIGN KEY (marca_tarjeta_id) REFERENCES marca_tarjeta(marca_tarjeta_id)
+	FOREIGN KEY (marca_tarjeta_id) REFERENCES marca_tarjeta(marca_tarjeta_id),
+	FOREIGN KEY(account_id) REFERENCES cuenta(account_id)
 )
 create TABLE direcciones(
 	direccion_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -84,33 +80,29 @@ create TABLE direcciones(
 	direccion_provincia TEXT NOT NULL,
 	direccion_pais TEXT NOT NULL
 )
+
+
 ALTER TABLE cliente ADD COLUMN direccion_id INTEGER REFERENCES direcciones(direccion_id);
 ALTER TABLE empleado ADD COLUMN direccion_id INTEGER REFERENCES direcciones(direccion_id);
 ALTER TABLE sucursal ADD COLUMN direccion_id INTEGER REFERENCES direcciones(direccion_id);
+
 --agregamos un index para ponerle el atributo UNIQUE al campo direccion_id de la tabla sucursal
 create UNIQUE INDEX idx_direccion_id_unique on sucursal(direccion_id)
 --actualizamos los campos de las direcciones de las tablas
+
+-- lo de aca abajo no lo ejecutamos------------------------------------
 UPDATE cliente
-SET direccion_id = (abs(random())%(499-1))
+SET direccion_id = (abs(random())%(200-1)+1)
 WHERE customer_id > 0
 
 UPDATE empleado
-SET direccion_id = (abs(random())%(499-1))
+SET direccion_id = (abs(random())%(400-200)+200)
 WHERE employee_id > 0
--- NO ANDA PERO LO INTENTE
-UPDATE sucursal
-SET direccion_id = (abs(random())%(SELECT d.direccion_id FROM direcciones as d, sucursal as s  WHERE d.direccion_id <> s.direccion_id ))
-WHERE branch_id > 0
-SELECT * from sucursal
-SELECT d.direccion_id FROM direcciones as d, sucursal as s  WHERE d.direccion_id != s.direccion_id 
-SELECT * from empleado
 
-SELECT strftime('%Y/%m/%d', employee_hire_date)
-from empleado
-group by employee_hire_date
-SELECT * from empleado
-UPDATE empleado  
-set employee_hire_date = strftime('%Y')
-WHERE employee_id = 3
+UPDATE sucursal 
+SET direccion_id = dir.direccion_id + 399
+FROM (SELECT * FROM direcciones) AS dir
+WHERE branch_id > 0 AND branch_id = dir.direccion_id
 
-SELECT * from tipo_cliente
+
+
