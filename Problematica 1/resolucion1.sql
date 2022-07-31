@@ -90,7 +90,6 @@ ALTER TABLE sucursal ADD COLUMN direccion_id INTEGER REFERENCES direcciones(dire
 create UNIQUE INDEX idx_direccion_id_unique on sucursal(direccion_id)
 --actualizamos los campos de las direcciones de las tablas
 
--- lo de aca abajo no lo ejecutamos------------------------------------
 UPDATE cliente
 SET direccion_id = (abs(random())%(200-1)+1)
 WHERE customer_id > 0
