@@ -104,4 +104,9 @@ FROM (SELECT * FROM direcciones) AS dir
 WHERE branch_id > 0 AND branch_id = dir.direccion_id
 
 
+--Actualizamos la fecha para que aparezca el formato YYYY/MM/DD 
+UPDATE empleado
+set employee_hire_date =  substr(employee_hire_date, 7, 4)  || '/' || substr(employee_hire_date, 4, 2) || '/' || substr(employee_hire_date, 1, 2)
+WHERE employee_id > 0;
 
+SELECT * FROM empleado
