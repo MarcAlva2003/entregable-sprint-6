@@ -82,7 +82,7 @@ WHERE customer_name like 'Lois' or
 
 -- Consultar sobre cuál es el tipo de préstamo de mayor importe
 
-SELECT loan_total 
+SELECT loan_type,loan_total
 FROM prestamo
 ORDER by loan_total DESC
 LIMIT 1
